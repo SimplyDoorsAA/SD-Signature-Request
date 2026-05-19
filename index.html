@@ -46,6 +46,7 @@
             padding: 40px;
             text-align: center;
             color: #c62828;
+            display: none; /* Hidden by default */
         }
     </style>
 </head>
@@ -59,7 +60,7 @@
     <div class="signing-container">
         <docuseal-form 
             id="docusealForm"
-            data-src="YOUR_DOCUSEAL_URL_HERE" 
+            data-src="https://docuseal.com/d/RmCMSkqJv5uEkU" 
             data-email="customer@example.com">
         </docuseal-form>
     </div>
@@ -102,6 +103,7 @@
             function showError(title, message) {
                 const overlay = document.createElement('div');
                 overlay.className = 'error-overlay';
+                overlay.style.display = 'flex'; // Make it visible
                 overlay.innerHTML = `
                     <h2 style="margin-bottom: 10px;">⚠️ ${title}</h2>
                     <p style="color: #555; max-width: 600px; line-height: 1.5;">${message}</p>

@@ -60,7 +60,7 @@
     <div class="signing-container">
         <docuseal-form 
             id="docusealForm"
-            data-src="http://localhost:3000/d/3dFGWPah7wNjak" 
+            data-src="https://elaborate-egomaniac-blabber.ngrok-free.dev/d/3dFGWPah7wNjak" 
             data-email="customer@example.com">
         </docuseal-form>
     </div>
@@ -79,7 +79,7 @@
                 } else if (window.location.protocol === 'https:' && currentSrc.startsWith('http://')) {
                     showError('Mixed Content Security Block', 'Your browser is blocking the insecure HTTP connection. Because you are testing a localhost link, you must open this HTML file directly from your computer (file:///) rather than loading it on a live HTTPS website.');
                 } else {
-                    showError('Connection Error', 'The document could not be loaded. Ensure Docker Desktop is running and the container is active.');
+                    showError('Connection Error', 'The document could not be loaded. Ensure Docker Desktop is running, your ngrok tunnel is active, and the container is online.');
                 }
             }, 5000);
 

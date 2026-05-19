@@ -74,10 +74,12 @@
             const loadTimeout = setTimeout(() => {
                 const currentSrc = formElement.getAttribute('data-src');
                 
-                if (currentSrc === 'YOUR_DOCUSEAL_URL_HERE') {
+                if (currentSrc.includes('YOUR_DOCUSEAL_URL_HERE')) {
                     showError('Configuration Needed', 'You forgot to change "YOUR_DOCUSEAL_URL_HERE" to your actual DocuSeal template link inside the code.');
                 } else if (window.location.protocol === 'https:' && currentSrc.startsWith('http://')) {
                     showError('Mixed Content Security Block', 'Your GitHub Pages site is secure (HTTPS), but your DocuSeal link is insecure (HTTP). Web browsers block this automatically. You must run DocuSeal over HTTPS or test this file locally on your computer.');
+                } else {
+                    showError('Connection Error', 'The document could not be loaded. Please check your internet connection or verify the template status in your DocuSeal dashboard.');
                 }
             }, 5000);
 

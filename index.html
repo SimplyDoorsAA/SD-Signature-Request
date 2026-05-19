@@ -60,7 +60,7 @@
     <div class="signing-container">
         <docuseal-form 
             id="docusealForm"
-            data-src="https://docuseal.com/d/RmCMSkqJv5uEkU" 
+            data-src="http://localhost:3000/d/3dFGWPah7wNjak" 
             data-email="customer@example.com">
         </docuseal-form>
     </div>
@@ -74,12 +74,12 @@
             const loadTimeout = setTimeout(() => {
                 const currentSrc = formElement.getAttribute('data-src');
                 
-                if (currentSrc.includes('YOUR_DOCUSEAL_URL_HERE')) {
-                    showError('Configuration Needed', 'You forgot to change "YOUR_DOCUSEAL_URL_HERE" to your actual DocuSeal template link inside the code.');
+                if (currentSrc.includes('YOUR_NEW_LOCAL_LINK_HERE')) {
+                    showError('Configuration Needed', 'You forgot to change "YOUR_NEW_LOCAL_LINK_HERE" to your actual local DocuSeal template link inside the code.');
                 } else if (window.location.protocol === 'https:' && currentSrc.startsWith('http://')) {
-                    showError('Mixed Content Security Block', 'Your GitHub Pages site is secure (HTTPS), but your DocuSeal link is insecure (HTTP). Web browsers block this automatically. You must run DocuSeal over HTTPS or test this file locally on your computer.');
+                    showError('Mixed Content Security Block', 'Your browser is blocking the insecure HTTP connection. Because you are testing a localhost link, you must open this HTML file directly from your computer (file:///) rather than loading it on a live HTTPS website.');
                 } else {
-                    showError('Connection Error', 'The document could not be loaded. Please check your internet connection or verify the template status in your DocuSeal dashboard.');
+                    showError('Connection Error', 'The document could not be loaded. Ensure Docker Desktop is running and the container is active.');
                 }
             }, 5000);
 

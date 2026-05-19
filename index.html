@@ -30,6 +30,22 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             overflow: hidden;
             min-height: 600px;
+            position: relative;
+        }
+        .error-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            text-align: center;
+            color: #c62828;
         }
     </style>
 </head>
@@ -51,13 +67,30 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const formElement = document.getElementById('docusealForm');
+            const container = document.querySelector('.signing-container');
             
-            // Listen for the completion event to trigger your next workflow steps
+            // Safety timeout: If the form doesn't load within 5 seconds, check for common errors
+            const loadTimeout = setTimeout(() => {
+                const currentSrc = formElement.getAttribute('data-src');
+                
+                if (currentSrc === 'YOUR_DOCUSEAL_URL_HERE') {
+                    showError('Configuration Needed', 'You forgot to change "YOUR_DOCUSEAL_URL_HERE" to your actual DocuSeal template link inside the code.');
+                } else if (window.location.protocol === 'https:' && currentSrc.startsWith('http://')) {
+                    showError('Mixed Content Security Block', 'Your GitHub Pages site is secure (HTTPS), but your DocuSeal link is insecure (HTTP). Web browsers block this automatically. You must run DocuSeal over HTTPS or test this file locally on your computer.');
+                }
+            }, 5000);
+
+            // Listen for successful load event
+            formElement.addEventListener('load', () => {
+                clearTimeout(loadTimeout);
+                console.log('DocuSeal form loaded successfully.');
+            });
+            
+            // Listen for the completion event
             formElement.addEventListener('completed', (event) => {
                 console.log('Document signed successfully!', event.detail);
                 
                 // Update the UI to show a success message
-                const container = document.querySelector('.signing-container');
                 container.innerHTML = `
                     <div style="padding: 40px; text-align: center;">
                         <h2 style="color: #2e7d32;">Signature Received!</h2>
@@ -65,6 +98,16 @@
                     </div>
                 `;
             });
+
+            function showError(title, message) {
+                const overlay = document.createElement('div');
+                overlay.className = 'error-overlay';
+                overlay.innerHTML = `
+                    <h2 style="margin-bottom: 10px;">⚠️ ${title}</h2>
+                    <p style="color: #555; max-width: 600px; line-height: 1.5;">${message}</p>
+                `;
+                container.appendChild(overlay);
+            }
         });
     </script>
 

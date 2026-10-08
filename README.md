@@ -34,6 +34,11 @@ committing it is expected and safe.
 > &mdash; the address itself never appears in the page source. To change where
 > submissions land, update the recipient in the Web3Forms dashboard; no code
 > change and no redeploy needed.
+>
+> Routing is two steps there, and the first alone does nothing: add the address
+> under **Account Settings &rarr; Linked Emails** and verify it, then select it
+> as the recipient under the form's own **Settings**. A linked-but-unselected
+> address still leaves submissions going to the account's signup address.
 
 If the key is ever cleared or replaced with the `YOUR_ACCESS_KEY_HERE`
 placeholder, the page shows an amber "Setup needed" banner and refuses to
@@ -83,10 +88,11 @@ your mail client writes straight back to them.
 
 ### Free-tier limits
 
-Web3Forms' free tier caps how many submissions you can receive per month; check
-the current number on their pricing page when you sign up. If intake volume ever
-outgrows it, the swap is a paid Web3Forms plan or moving `buildPayload()` to a
-small serverless endpoint &mdash; the form markup itself would not change.
+The account is on the free tier, which allows **250 submissions per month**
+(the usage meter in the Web3Forms dashboard sidebar shows the current count).
+If intake volume ever outgrows that, the swap is a paid Web3Forms plan or moving
+`buildPayload()` to a small serverless endpoint &mdash; the form markup itself
+would not change.
 
 ---
 

@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimplyDoors - Project Intake Form</title>
+
+    <style>
+        :root {
+            --page-bg: #f4f7f6;
+            --card-bg: #ffffff;
+            --ink: #333333;
+            --ink-soft: #5f6b68;
+            --ink-faint: #8a9391;
+            --line: #dfe5e3;
+            --line-strong: #c3cdca;
+            --accent: #1f6f5c;
+            --success: #2e7d32;
+            --error: #c62828;
+            --warn-bg: #fff8e1;
+            --warn-line: #f0d48a;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--page-bg);
+            color: var(--ink);
+            margin: 0;
+            padding: 40px 20px 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1.5;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+            max-width: 640px;
+        }
+        .header h1 {
+            margin: 0 0 8px;
+            font-size: 1.9rem;
+            letter-spacing: -0.01em;
+        }
+        .header p {
+            margin: 0;
+            color: var(--ink-soft);
+        }
+
+        .card {
+            width: 100%;
+            max-width: 760px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .card-body { padding: 32px; }
+
+        .config-notice {
+            display: none;
+            margin: 0;
+            padding: 16px 32px;
+            background: var(--warn-bg);
+            border-bottom: 1px solid var(--warn-line);
+            color: #7a5c00;
+            font-size: 0.9rem;
+        }
+        .config-notice code {
+            background: rgba(0,0,0,0.06);
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-size: 0.85rem;
+        }
+
+        fieldset {
+            border: 0;
+            padding: 0;
+            margin: 0 0 28px;
+        }
+        fieldset:last-of-type { margin-bottom: 20px; }
+
+        legend {
+            padding: 0;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent);
+            margin-bottom: 14px;
+            width: 100%;
+            border-bottom: 1px solid var(--line);
+            padding-bottom: 8px;
+        }
+
+        .row {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 16px;
+            grid-template-columns: 1fr;
+        }
+        .row:last-child { margin-bottom: 0; }
+        .row.two { grid-template-columns: 1fr 1fr; }
+        .row.city-state-zip { grid-template-columns: 2fr 1fr 1fr; }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--ink-soft);
+            margin-bottom: 6px;
+        }
+        .req { color: var(--error); font-weight: 400; }
+        .optional {
+            color: var(--ink-faint);
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 11px 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            color: var(--ink);
+            background: #fff;
+            border: 1px solid var(--line-strong);
+            border-radius: 5px;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        input:hover, textarea:hover { border-color: #9aa8a4; }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(31,111,92,0.15);
+        }
+        textarea { resize: vertical; min-height: 130px; }
+
+        input[aria-invalid="true"], textarea[aria-invalid="true"] {
+            border-color: var(--error);
+        }
+        input[aria-invalid="true"]:focus, textarea[aria-invalid="true"]:focus {
+            box-shadow: 0 0 0 3px rgba(198,40,40,0.15);
+        }
+
+        .field-error {
+            display: none;
+            color: var(--error);
+            font-size: 0.82rem;
+            margin-top: 5px;
+        }
+        .field-error.visible { display: block; }
+
+        .hint {
+            font-size: 0.82rem;
+            color: var(--ink-faint);
+            margin-top: 5px;
+        }
+
+        .same-as-billing {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 16px;
+            font-size: 0.9rem;
+            color: var(--ink-soft);
+            cursor: pointer;
+            user-select: none;
+        }
+        .same-as-billing input {
+            width: 17px;
+            height: 17px;
+            accent-color: var(--accent);
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .job-address-fields.hidden { display: none; }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            border-top: 1px solid var(--line);
+            padding-top: 24px;
+        }
+
+        button[type="submit"] {
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            background: var(--accent);
+            border: 0;
+            border-radius: 5px;
+            padding: 13px 30px;
+            cursor: pointer;
+            transition: background 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        button[type="submit"]:hover:not(:disabled) { background: #175647; }
+        button[type="submit"]:focus-visible {
+            outline: 3px solid rgba(31,111,92,0.4);
+            outline-offset: 2px;
+        }
+        button[type="submit"]:disabled {
+            background: var(--line-strong);
+            cursor: not-allowed;
+        }
+
+        .spinner {
+            display: none;
+            width: 15px;
+            height: 15px;
+            border: 2px solid rgba(255,255,255,0.4);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        .is-submitting .spinner { display: block; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .form-note { font-size: 0.85rem; color: var(--ink-faint); margin: 0; }
+
+        .form-error {
+            display: none;
+            margin: 0 0 20px;
+            padding: 14px 16px;
+            background: #fdecea;
+            border: 1px solid #f5c2bd;
+            border-radius: 5px;
+            color: var(--error);
+            font-size: 0.9rem;
+        }
+        .form-error.visible { display: block; }
+
+        .success-panel { display: none; padding: 56px 32px; text-align: center; }
+        .success-panel.visible { display: block; }
+        .success-panel h2 { color: var(--success); margin: 0 0 12px; }
+        .success-panel p {
+            margin: 0 auto;
+            max-width: 460px;
+            color: var(--ink-soft);
+        }
+        .success-check {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: #e8f5e9;
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.9rem;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px; height: 1px;
+            padding: 0; margin: -1px;
+            overflow: hidden;
+            clip: rect(0,0,0,0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        @media (max-width: 620px) {
+            body { padding: 24px 14px 40px; }
+            .card-body { padding: 22px; }
+            .config-notice { padding: 14px 22px; }
+            .header h1 { font-size: 1.5rem; }
+            .row.two { grid-template-columns: 1fr; }
+            /* City gets its own line; State and ZIP are short enough to share one. */
+            .row.city-state-zip { grid-template-columns: 1fr 1fr; }
+            .row.city-state-zip > div:first-child { grid-column: 1 / -1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Project Intake Form</h1>
+        <p>Tell us about your project and we'll get back to you with next steps.</p>
+    </div>
+
+    <div class="card">
+        <div class="config-notice" id="configNotice">
+            <strong>Setup needed:</strong> replace <code>YOUR_ACCESS_KEY_HERE</code> in
+            <code>intake.html</code> with your Web3Forms access key. Until then, submissions
+            will not be delivered. See <code>README.md</code> for the steps.
+        </div>
+
+        <div class="card-body" id="formWrapper">
+            <p class="form-error" id="formError" role="alert"></p>
+
+            <form id="intakeForm" novalidate>
+                <fieldset>
+                    <legend>Your Information</legend>
+                    <div class="row two">
+                        <div>
+                            <label for="company">Company <span class="req" aria-hidden="true">*</span></label>
+                            <input type="text" id="company" name="company" autocomplete="organization" required>
+                            <p class="field-error" id="company-error"></p>
+                        </div>
+                        <div>
+                            <label for="contactName">Your Name <span class="req" aria-hidden="true">*</span></label>
+                            <input type="text" id="contactName" name="contactName" autocomplete="name" required>
+                            <p class="field-error" id="contactName-error"></p>
+                        </div>
+                    </div>
+                    <div class="row two">
+                        <div>
+                            <label for="phone">Phone Number <span class="req" aria-hidden="true">*</span></label>
+                            <input type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel" required>
+                            <p class="field-error" id="phone-error"></p>
+                        </div>
+                        <div>
+                            <label for="email">Email <span class="req" aria-hidden="true">*</span></label>
+                            <input type="email" id="email" name="email" autocomplete="email" inputmode="email" required>
+                            <p class="field-error" id="email-error"></p>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Billing Address</legend>
+                    <div class="row">
+                        <div>
+                            <label for="billingStreet">Street Address <span class="req" aria-hidden="true">*</span></label>
+                            <input type="text" id="billingStreet" name="billingStreet" autocomplete="billing street-address" required>
+                            <p class="field-error" id="billingStreet-error"></p>
+                        </div>
+                    </div>
+                    <div class="row city-state-zip">
+                        <div>
+                            <label for="billingCity">City <span class="req" aria-hidden="true">*</span></label>
+                            <input type="text" id="billingCity" name="billingCity" autocomplete="billing address-level2" required>
+                            <p class="field-error" id="billingCity-error"></p>
+                        </div>
+                        <div>
+                            <label for="billingState">State <span class="req" aria-hidden="true">*</span></label>
+                            <input type="text" id="billingState" name="billingState" autocomplete="billing address-level1" maxlength="20" required>
+                            <p class="field-error" id="billingState-error"></p>
+                        </div>
+                        <div>
+                            <label for="billingZip">ZIP <span class="req" aria-hidden="true">*</span></label>
+                            <input type="text" id="billingZip" name="billingZip" autocomplete="billing postal-code" maxlength="10" required>
+                            <p class="field-error" id="billingZip-error"></p>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Job Address</legend>
+                    <label class="same-as-billing" for="sameAsBilling">
+                        <input type="checkbox" id="sameAsBilling">
+                        <span>Job address is the same as the billing address</span>
+                    </label>
+                    <div class="job-address-fields" id="jobAddressFields">
+                        <div class="row">
+                            <div>
+                                <label for="jobStreet">Street Address <span class="req" aria-hidden="true">*</span></label>
+                                <input type="text" id="jobStreet" name="jobStreet" autocomplete="shipping street-address" required>
+                                <p class="field-error" id="jobStreet-error"></p>
+                            </div>
+                        </div>
+                        <div class="row city-state-zip">
+                            <div>
+                                <label for="jobCity">City <span class="req" aria-hidden="true">*</span></label>
+                                <input type="text" id="jobCity" name="jobCity" autocomplete="shipping address-level2" required>
+                                <p class="field-error" id="jobCity-error"></p>
+                            </div>
+                            <div>
+                                <label for="jobState">State <span class="req" aria-hidden="true">*</span></label>
+                                <input type="text" id="jobState" name="jobState" autocomplete="shipping address-level1" maxlength="20" required>
+                                <p class="field-error" id="jobState-error"></p>
+                            </div>
+                            <div>
+                                <label for="jobZip">ZIP <span class="req" aria-hidden="true">*</span></label>
+                                <input type="text" id="jobZip" name="jobZip" autocomplete="shipping postal-code" maxlength="10" required>
+                                <p class="field-error" id="jobZip-error"></p>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Project Details</legend>
+                    <div class="row">
+                        <div>
+                            <label for="description">What are you looking for? <span class="req" aria-hidden="true">*</span></label>
+                            <textarea id="description" name="description" required
+                                placeholder="A brief description of the work &mdash; type and quantity of doors, hardware, timeline, measurements you already have, anything else we should know."></textarea>
+                            <p class="field-error" id="description-error"></p>
+                            <p class="hint">A couple of sentences is plenty &mdash; we'll follow up with any questions.</p>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <!-- Spam honeypot: real people never see or fill this. -->
+                <label class="sr-only" for="botcheck" aria-hidden="true">Leave this field empty</label>
+                <input type="checkbox" id="botcheck" name="botcheck" class="sr-only" tabindex="-1" autocomplete="off">
+
+                <div class="actions">
+                    <button type="submit" id="submitButton">
+                        <span class="spinner" aria-hidden="true"></span>
+                        <span id="submitLabel">Submit Request</span>
+                    </button>
+                    <p class="form-note">Fields marked <span class="req">*</span> are required.</p>
+                </div>
+            </form>
+        </div>
+
+        <div class="success-panel" id="successPanel" role="status">
+            <div class="success-check" aria-hidden="true">&#10003;</div>
+            <h2>Request Received</h2>
+            <p>Thank you &mdash; your project details are on their way to our team.
+               We'll review them and reach out to you shortly at the phone number
+               and email you provided.</p>
+        </div>
+    </div>
+
+    <script>
+        // ---------------------------------------------------------------
+        // Web3Forms access key. Get one free at https://web3forms.com --
+        // you enter the email address you want submissions sent to, and
+        // they email you this key. The destination address lives with the
+        // key, not in this file, so it is safe to commit.
+        // ---------------------------------------------------------------
+        const ACCESS_KEY = '496b94f6-00a0-43cc-b485-f71dff873dad';
+
+        const ENDPOINT = 'https://api.web3forms.com/submit';
+
+        const form = document.getElementById('intakeForm');
+        const formWrapper = document.getElementById('formWrapper');
+        const successPanel = document.getElementById('successPanel');
+        const formError = document.getElementById('formError');
+        const submitButton = document.getElementById('submitButton');
+        const submitLabel = document.getElementById('submitLabel');
+        const sameAsBilling = document.getElementById('sameAsBilling');
+        const jobAddressFields = document.getElementById('jobAddressFields');
+        const configNotice = document.getElementById('configNotice');
+
+        const isConfigured = ACCESS_KEY && ACCESS_KEY !== 'YOUR_ACCESS_KEY_HERE';
+        if (!isConfigured) {
+            configNotice.style.display = 'block';
+        }
+
+        const jobFieldIds = ['jobStreet', 'jobCity', 'jobState', 'jobZip'];
+
+        // "Same as billing" hides the job address block and takes those
+        // fields out of validation, since they are then derived.
+        sameAsBilling.addEventListener('change', () => {
+            const same = sameAsBilling.checked;
+            jobAddressFields.classList.toggle('hidden', same);
+            jobFieldIds.forEach((id) => {
+                const field = document.getElementById(id);
+                field.required = !same;
+                if (same) clearFieldError(field);
+            });
+        });
+
+        function setFieldError(field, message) {
+            const errorEl = document.getElementById(field.id + '-error');
+            field.setAttribute('aria-invalid', 'true');
+            if (errorEl) {
+                errorEl.textContent = message;
+                errorEl.classList.add('visible');
+            }
+        }
+
+        function clearFieldError(field) {
+            const errorEl = document.getElementById(field.id + '-error');
+            field.removeAttribute('aria-invalid');
+            if (errorEl) {
+                errorEl.textContent = '';
+                errorEl.classList.remove('visible');
+            }
+        }
+
+        // Clear a field's error as soon as the person starts correcting it.
+        form.querySelectorAll('input, textarea').forEach((field) => {
+            field.addEventListener('input', () => clearFieldError(field));
+        });
+
+        function validate() {
+            let firstInvalid = null;
+
+            form.querySelectorAll('[required]').forEach((field) => {
+                clearFieldError(field);
+                const value = field.value.trim();
+                let message = '';
+
+                if (!value) {
+                    message = 'This field is required.';
+                } else if (field.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value)) {
+                    message = 'Enter a valid email address, e.g. name@company.com';
+                } else if (field.type === 'tel' && value.replace(/\D/g, '').length < 10) {
+                    message = 'Enter a phone number including area code.';
+                }
+
+                if (message) {
+                    setFieldError(field, message);
+                    if (!firstInvalid) firstInvalid = field;
+                }
+            });
+
+            if (firstInvalid) {
+                firstInvalid.focus();
+                firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return false;
+            }
+            return true;
+        }
+
+        function value(id) {
+            return document.getElementById(id).value.trim();
+        }
+
+        function formatAddress(prefix) {
+            const street = value(prefix + 'Street');
+            const city = value(prefix + 'City');
+            const state = value(prefix + 'State').toUpperCase();
+            const zip = value(prefix + 'Zip');
+            return street + ', ' + city + ', ' + state + ' ' + zip;
+        }
+
+        // Keys here become the row labels in the email, so they are written
+        // the way they should read in the inbox.
+        function buildPayload() {
+            const billingAddress = formatAddress('billing');
+            const jobAddress = sameAsBilling.checked
+                ? billingAddress + ' (same as billing)'
+                : formatAddress('job');
+
+            return {
+                access_key: ACCESS_KEY,
+                subject: 'New Project Inquiry - ' + value('company'),
+                from_name: 'SimplyDoors Intake Form',
+                replyto: value('email'),
+                botcheck: document.getElementById('botcheck').checked,
+                'Company': value('company'),
+                'Contact Name': value('contactName'),
+                'Phone': value('phone'),
+                'Email': value('email'),
+                'Billing Address': billingAddress,
+                'Job Address': jobAddress,
+                'What They Are Looking For': value('description'),
+                'Submitted': new Date().toLocaleString()
+            };
+        }
+
+        function setSubmitting(submitting) {
+            submitButton.disabled = submitting;
+            submitButton.classList.toggle('is-submitting', submitting);
+            submitLabel.textContent = submitting ? 'Sending...' : 'Submit Request';
+        }
+
+        function showFormError(message) {
+            formError.textContent = message;
+            formError.classList.add('visible');
+            formError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            formError.classList.remove('visible');
+
+            if (!validate()) return;
+
+            if (!isConfigured) {
+                showFormError('This form is not finished being set up, so it cannot send yet. ' +
+                              'Please call us directly, or try again later.');
+                return;
+            }
+
+            setSubmitting(true);
+
+            try {
+                const response = await fetch(ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(buildPayload())
+                });
+
+                const result = await response.json().catch(() => ({}));
+
+                if (response.ok && result.success) {
+                    formWrapper.style.display = 'none';
+                    successPanel.classList.add('visible');
+                    successPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else {
+                    console.error('Submission rejected:', result);
+                    showFormError(result.message ||
+                        'Something went wrong sending your request. Please try again, ' +
+                        'or give us a call if the problem continues.');
+                    setSubmitting(false);
+                }
+            } catch (error) {
+                console.error('Submission failed:', error);
+                showFormError('We could not reach our server. Please check your internet ' +
+                              'connection and try again.');
+                setSubmitting(false);
+            }
+        });
+    </script>
+
+</body>
+</html>

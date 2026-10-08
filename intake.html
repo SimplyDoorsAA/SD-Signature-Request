@@ -2,8 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>SimplyDoors - Project Intake Form</title>
+    <meta name="description" content="Tell SimplyDoors about your project and we'll get back to you with next steps.">
+    <meta name="theme-color" content="#1f6f5c">
+
+    <!-- Added to an iPhone/iPad home screen, these make the page open
+         full-screen like an app instead of inside a Safari tab. -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Doors Intake">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" href="icon-192.png">
+    <link rel="manifest" href="manifest.webmanifest">
 
     <style>
         :root {
@@ -28,7 +40,12 @@
             background-color: var(--page-bg);
             color: var(--ink);
             margin: 0;
-            padding: 40px 20px 60px;
+            /* Safe-area insets keep content clear of the notch and home
+               indicator when launched full-screen from the home screen. */
+            padding: calc(40px + env(safe-area-inset-top, 0px))
+                     calc(20px + env(safe-area-inset-right, 0px))
+                     calc(60px + env(safe-area-inset-bottom, 0px))
+                     calc(20px + env(safe-area-inset-left, 0px));
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -266,6 +283,25 @@
             font-size: 1.9rem;
         }
 
+        .new-request {
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--accent);
+            background: #fff;
+            border: 1px solid var(--line-strong);
+            border-radius: 5px;
+            padding: 11px 24px;
+            margin-top: 28px;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+        }
+        .new-request:hover { background: #f1f6f4; border-color: var(--accent); }
+        .new-request:focus-visible {
+            outline: 3px solid rgba(31,111,92,0.4);
+            outline-offset: 2px;
+        }
+
         .sr-only {
             position: absolute;
             width: 1px; height: 1px;
@@ -277,7 +313,12 @@
         }
 
         @media (max-width: 620px) {
-            body { padding: 24px 14px 40px; }
+            body {
+                padding: calc(24px + env(safe-area-inset-top, 0px))
+                         calc(14px + env(safe-area-inset-right, 0px))
+                         calc(40px + env(safe-area-inset-bottom, 0px))
+                         calc(14px + env(safe-area-inset-left, 0px));
+            }
             .card-body { padding: 22px; }
             .config-notice { padding: 14px 22px; }
             .header h1 { font-size: 1.5rem; }
@@ -310,9 +351,10 @@
                     <legend>Your Information</legend>
                     <div class="row two">
                         <div>
-                            <label for="company">Company <span class="req" aria-hidden="true">*</span></label>
+                            <label for="company">Builder / Contractor Name <span class="req" aria-hidden="true">*</span></label>
                             <input type="text" id="company" name="company" autocomplete="organization" required>
                             <p class="field-error" id="company-error"></p>
+                            <p class="hint">Company name, as it should appear on the quote.</p>
                         </div>
                         <div>
                             <label for="contactName">Your Name <span class="req" aria-hidden="true">*</span></label>
@@ -429,6 +471,9 @@
             <p>Thank you &mdash; your project details are on their way to our team.
                We'll review them and reach out to you shortly at the phone number
                and email you provided.</p>
+            <button type="button" class="new-request" id="newRequestButton">
+                Start Another Request
+            </button>
         </div>
     </div>
 
@@ -551,7 +596,7 @@
                 from_name: 'SimplyDoors Intake Form',
                 replyto: value('email'),
                 botcheck: document.getElementById('botcheck').checked,
-                'Company': value('company'),
+                'Builder / Contractor': value('company'),
                 'Contact Name': value('contactName'),
                 'Phone': value('phone'),
                 'Email': value('email'),
@@ -573,6 +618,22 @@
             formError.classList.add('visible');
             formError.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
+
+        // Clears the form so the device can be handed straight to the next
+        // customer without reloading the page.
+        document.getElementById('newRequestButton').addEventListener('click', () => {
+            form.reset();
+            form.querySelectorAll('input, textarea').forEach(clearFieldError);
+            // form.reset() restores the checkbox but not the state it drove.
+            jobAddressFields.classList.remove('hidden');
+            jobFieldIds.forEach((id) => { document.getElementById(id).required = true; });
+            formError.classList.remove('visible');
+            setSubmitting(false);
+            successPanel.classList.remove('visible');
+            formWrapper.style.display = '';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.getElementById('company').focus();
+        });
 
         form.addEventListener('submit', async (event) => {
             event.preventDefault();

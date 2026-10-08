@@ -63,6 +63,48 @@ Submitted                  10/8/2026, 2:35 PM
 **Reply-to** is set to the customer's own email address, so hitting Reply in
 your mail client writes straight back to them.
 
+### Sending it to customers
+
+Once the site is published, the form lives at a single public URL:
+
+```
+https://simplydoorsaa.github.io/SD-Signature-Request/intake.html
+```
+
+That link is all a customer needs &mdash; paste it into a text message or an
+email and they can fill the form out on their own phone. Nothing is required of
+them beyond a browser: no app, no login, no account.
+
+If that URL 404s, GitHub Pages is not switched on yet. Turn it on under the
+repository's **Settings &rarr; Pages**, with the source set to deploy from the
+`main` branch. The address will then be live within a minute or two.
+
+### Saving it to your phone or iPad
+
+The page carries web-app metadata, so it can be pinned to a home screen and
+opened like a native app &mdash; full screen, no browser chrome, with the door
+icon from `apple-touch-icon.png`.
+
+**On iPhone or iPad (Safari):** open the link, tap the Share button, choose
+**Add to Home Screen**, then **Add**. It appears as "Doors Intake".
+
+**On Android (Chrome):** open the link, tap the three-dot menu, choose
+**Add to Home screen** or **Install app**.
+
+Pinning must be done from Safari on iOS; Chrome on iPhone cannot add a
+home-screen app that launches full screen.
+
+This is the hand-it-over flow: tap the icon, pass the device to the customer,
+let them fill it in and submit. The success screen then offers **Start Another
+Request**, which clears every field and returns to a blank form, so the same
+device can be handed to the next customer without reloading or backing out.
+
+> **No offline support.** The form needs a live connection to submit, since the
+> email is sent by Web3Forms rather than the device. On a job site with no
+> signal, submitting will show a connection error rather than losing the entry
+> silently &mdash; but the entered text is still on screen, so it can be sent
+> once there is signal again.
+
 ### Behavior worth knowing
 
 - **"Same as billing"** checkbox copies the billing address into the job

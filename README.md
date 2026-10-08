@@ -119,11 +119,21 @@ device can be handed to the next customer without reloading or backing out.
 
 ### Customizing
 
-- **Wording and branding** &mdash; edit the `.header` block and the `legend`
-  elements directly.
-- **Colors** &mdash; the palette is a handful of CSS custom properties in
-  `:root` at the top of the file; `--accent` drives the buttons and section
-  headings.
+- **Brand colors** &mdash; every colour in the page resolves to a token in the
+  `:root` block at the top of `intake.html`. Swapping the real SimplyDoors
+  palette in is an edit to that block alone:
+  `--brand` (buttons, section numbers, focus rings), `--brand-dark` (header
+  bar), `--brand-tint` (soft fills), `--accent` (required markers, eyebrow),
+  and `--canvas` / `--paper` / `--ink` for the ground and text.
+- **Logo** &mdash; the header currently uses a type wordmark beside an inline
+  SVG door mark. To use a real logo, replace the `<svg>` inside
+  `.wordmark` with an `<img>` and drop the `.wordmark-text` div.
+- **Wording** &mdash; the `.page-intro` block holds the eyebrow, headline and
+  standfirst; section titles are the `legend` elements (they number themselves
+  through a CSS counter, so reordering sections renumbers them automatically).
+- **Typefaces** &mdash; `--serif` (Georgia) for headings and `--sans` (system
+  stack) for everything else. Both are installed on effectively every device,
+  so the page loads no webfonts and makes no third-party requests.
 - **Adding a field** &mdash; add the input with an `id`, add a matching
   `<p class="field-error" id="<id>-error">`, then add a line to `buildPayload()`.
   The object keys in `buildPayload()` are what appear as labels in the email.

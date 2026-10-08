@@ -18,73 +18,132 @@
     <link rel="manifest" href="manifest.webmanifest">
 
     <style>
+        /* ---------------------------------------------------------------
+           Brand tokens. Everything visual keys off these -- swapping in
+           the real SimplyDoors palette is an edit to this block alone.
+           --------------------------------------------------------------- */
         :root {
-            --page-bg: #f4f7f6;
-            --card-bg: #ffffff;
-            --ink: #333333;
-            --ink-soft: #5f6b68;
-            --ink-faint: #8a9391;
-            --line: #dfe5e3;
-            --line-strong: #c3cdca;
-            --accent: #1f6f5c;
-            --success: #2e7d32;
-            --error: #c62828;
-            --warn-bg: #fff8e1;
-            --warn-line: #f0d48a;
+            --brand:        #15604a;   /* primary green  */
+            --brand-dark:   #0e4737;   /* header bar     */
+            --brand-tint:   #eef4f1;   /* soft fills     */
+            --accent:       #c0873c;   /* brass detail   */
+
+            --canvas:       #f4f2ee;   /* warm paper ground */
+            --paper:        #ffffff;
+            --ink:          #1b211e;
+            --ink-soft:     #55605b;
+            --ink-faint:    #8b958f;
+            --line:         #e4e0d8;
+            --line-strong:  #cfcabe;
+
+            --success:      #1f6f3f;
+            --error:        #b3261e;
+            --error-bg:     #fdf0ef;
+            --error-line:   #f0cdc9;
+            --warn-bg:      #fdf6e3;
+            --warn-line:    #e8d5a3;
+            --warn-ink:     #7a5c12;
+
+            --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+                    'Helvetica Neue', Arial, sans-serif;
+            /* Georgia ships on effectively every phone, tablet and desktop,
+               so the headings need no webfont and no network round-trip. */
+            --serif: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+
+            --radius: 8px;
+            --shadow: 0 1px 2px rgba(27,33,30,0.04), 0 8px 28px rgba(27,33,30,0.08);
         }
 
         * { box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--page-bg);
+            font-family: var(--sans);
+            background: var(--canvas);
             color: var(--ink);
             margin: 0;
-            /* Safe-area insets keep content clear of the notch and home
-               indicator when launched full-screen from the home screen. */
-            padding: calc(40px + env(safe-area-inset-top, 0px))
-                     calc(20px + env(safe-area-inset-right, 0px))
-                     calc(60px + env(safe-area-inset-bottom, 0px))
+            padding: 0 0 calc(56px + env(safe-area-inset-bottom, 0px));
+            line-height: 1.55;
+            -webkit-font-smoothing: antialiased;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        /* ---------- Branded header bar ---------- */
+        .site-header {
+            background: var(--brand-dark);
+            padding: calc(18px + env(safe-area-inset-top, 0px))
+                     calc(20px + env(safe-area-inset-right, 0px)) 18px
                      calc(20px + env(safe-area-inset-left, 0px));
             display: flex;
-            flex-direction: column;
+            justify-content: center;
+        }
+        .wordmark {
+            display: flex;
             align-items: center;
-            line-height: 1.5;
+            gap: 13px;
+            width: 100%;
+            max-width: 780px;
         }
+        .wordmark svg { display: block; flex: none; }
+        .wordmark-text {
+            font-size: 1.12rem;
+            font-weight: 700;
+            letter-spacing: 0.17em;
+            text-transform: uppercase;
+            color: #fff;
+            line-height: 1.1;
+        }
+        .wordmark-text span { font-weight: 300; color: #b9d3c8; }
 
-        .header {
+        /* ---------- Hero ---------- */
+        .page-intro {
             text-align: center;
-            margin-bottom: 28px;
-            max-width: 640px;
+            padding: 44px 20px 30px;
+            max-width: 620px;
+            margin: 0 auto;
         }
-        .header h1 {
-            margin: 0 0 8px;
-            font-size: 1.9rem;
-            letter-spacing: -0.01em;
+        .eyebrow {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin: 0 0 12px;
         }
-        .header p {
+        .page-intro h1 {
+            font-family: var(--serif);
+            font-weight: 400;
+            font-size: 2.3rem;
+            line-height: 1.17;
+            letter-spacing: -0.015em;
+            margin: 0 0 12px;
+            color: var(--ink);
+        }
+        .page-intro p {
             margin: 0;
             color: var(--ink-soft);
+            font-size: 1.04rem;
         }
 
+        /* ---------- Card ---------- */
         .card {
-            width: 100%;
-            max-width: 760px;
-            background: var(--card-bg);
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: calc(100% - 40px);
+            max-width: 780px;
+            margin: 0 auto;
+            background: var(--paper);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
             overflow: hidden;
         }
-
-        .card-body { padding: 32px; }
+        .card-body { padding: 40px 44px 36px; }
 
         .config-notice {
             display: none;
             margin: 0;
-            padding: 16px 32px;
+            padding: 16px 44px;
             background: var(--warn-bg);
             border-bottom: 1px solid var(--warn-line);
-            color: #7a5c00;
+            color: var(--warn-ink);
             font-size: 0.9rem;
         }
         .config-notice code {
@@ -94,153 +153,166 @@
             font-size: 0.85rem;
         }
 
-        fieldset {
-            border: 0;
-            padding: 0;
-            margin: 0 0 28px;
-        }
-        fieldset:last-of-type { margin-bottom: 20px; }
+        /* ---------- Numbered sections ---------- */
+        form { counter-reset: section; }
+
+        fieldset { border: 0; padding: 0; margin: 0 0 34px; }
+        fieldset:last-of-type { margin-bottom: 26px; }
 
         legend {
-            padding: 0;
-            font-size: 0.78rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--accent);
-            margin-bottom: 14px;
+            counter-increment: section;
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 0 0 11px;
+            margin-bottom: 20px;
             width: 100%;
             border-bottom: 1px solid var(--line);
-            padding-bottom: 8px;
+            font-size: 0.79rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--brand);
+        }
+        legend::before {
+            content: counter(section);
+            flex: none;
+            width: 23px;
+            height: 23px;
+            border-radius: 50%;
+            background: var(--brand-tint);
+            color: var(--brand);
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .row {
-            display: grid;
-            gap: 16px;
-            margin-bottom: 16px;
-            grid-template-columns: 1fr;
-        }
+        .row { display: grid; gap: 18px; margin-bottom: 18px; grid-template-columns: 1fr; }
         .row:last-child { margin-bottom: 0; }
         .row.two { grid-template-columns: 1fr 1fr; }
         .row.city-state-zip { grid-template-columns: 2fr 1fr 1fr; }
 
         label {
             display: block;
-            font-size: 0.85rem;
+            font-size: 0.855rem;
             font-weight: 600;
-            color: var(--ink-soft);
-            margin-bottom: 6px;
-        }
-        .req { color: var(--error); font-weight: 400; }
-        .optional {
-            color: var(--ink-faint);
-            font-weight: 400;
-            text-transform: none;
-            letter-spacing: 0;
-        }
-
-        input[type="text"],
-        input[type="tel"],
-        input[type="email"],
-        textarea {
-            width: 100%;
-            padding: 11px 12px;
-            font-family: inherit;
-            font-size: 1rem;
             color: var(--ink);
-            background: #fff;
-            border: 1px solid var(--line-strong);
-            border-radius: 5px;
-            transition: border-color 0.15s, box-shadow 0.15s;
+            margin-bottom: 7px;
+            letter-spacing: 0.005em;
         }
-        input:hover, textarea:hover { border-color: #9aa8a4; }
+        .req { color: var(--accent); font-weight: 700; }
+
+        input[type="text"], input[type="tel"], input[type="email"], textarea {
+            width: 100%;
+            /* 17px: at least 16px keeps iOS Safari from zooming on focus,
+               and the extra pixel reads better at arm's length on an iPad. */
+            font-size: 17px;
+            font-family: inherit;
+            color: var(--ink);
+            background: #fcfcfb;
+            border: 1px solid var(--line-strong);
+            border-radius: 6px;
+            padding: 13px 14px;          /* ~48px tall: a comfortable touch target */
+            transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+        }
+        input::placeholder, textarea::placeholder { color: #a9b2ad; }
+        input:hover, textarea:hover { border-color: #b4ada0; }
         input:focus, textarea:focus {
             outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(31,111,92,0.15);
+            background: var(--paper);
+            border-color: var(--brand);
+            box-shadow: 0 0 0 3px rgba(21,96,74,0.14);
         }
-        textarea { resize: vertical; min-height: 130px; }
+        textarea { resize: vertical; min-height: 140px; line-height: 1.6; }
 
-        input[aria-invalid="true"], textarea[aria-invalid="true"] {
-            border-color: var(--error);
-        }
+        input[aria-invalid="true"], textarea[aria-invalid="true"] { border-color: var(--error); }
         input[aria-invalid="true"]:focus, textarea[aria-invalid="true"]:focus {
-            box-shadow: 0 0 0 3px rgba(198,40,40,0.15);
+            box-shadow: 0 0 0 3px rgba(179,38,30,0.14);
         }
 
         .field-error {
             display: none;
             color: var(--error);
-            font-size: 0.82rem;
-            margin-top: 5px;
+            font-size: 0.825rem;
+            margin: 6px 0 0;
         }
         .field-error.visible { display: block; }
 
-        .hint {
-            font-size: 0.82rem;
-            color: var(--ink-faint);
-            margin-top: 5px;
-        }
+        .hint { font-size: 0.825rem; color: var(--ink-faint); margin: 6px 0 0; }
 
         .same-as-billing {
             display: flex;
             align-items: center;
-            gap: 9px;
-            margin-bottom: 16px;
-            font-size: 0.9rem;
-            color: var(--ink-soft);
+            gap: 11px;
+            margin-bottom: 20px;
+            padding: 13px 15px;
+            background: var(--brand-tint);
+            border: 1px solid #dbe8e2;
+            border-radius: 6px;
+            font-size: 0.92rem;
+            font-weight: 500;
+            color: var(--ink);
             cursor: pointer;
             user-select: none;
         }
         .same-as-billing input {
-            width: 17px;
-            height: 17px;
-            accent-color: var(--accent);
+            width: 19px; height: 19px;
+            accent-color: var(--brand);
             margin: 0;
+            flex: none;
             cursor: pointer;
         }
 
         .job-address-fields.hidden { display: none; }
 
+        /* ---------- Actions ---------- */
         .actions {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 18px;
             flex-wrap: wrap;
             border-top: 1px solid var(--line);
-            padding-top: 24px;
+            padding-top: 26px;
         }
-
         button[type="submit"] {
             font-family: inherit;
-            font-size: 1rem;
+            font-size: 1.02rem;
             font-weight: 600;
+            letter-spacing: 0.01em;
             color: #fff;
-            background: var(--accent);
+            background: var(--brand);
             border: 0;
-            border-radius: 5px;
-            padding: 13px 30px;
+            border-radius: 6px;
+            padding: 15px 34px;
             cursor: pointer;
-            transition: background 0.15s;
             display: inline-flex;
             align-items: center;
             gap: 10px;
+            box-shadow: 0 1px 2px rgba(14,71,55,0.25);
+            transition: background 0.15s, transform 0.06s, box-shadow 0.15s;
         }
-        button[type="submit"]:hover:not(:disabled) { background: #175647; }
+        button[type="submit"]:hover:not(:disabled) {
+            background: var(--brand-dark);
+            box-shadow: 0 3px 10px rgba(14,71,55,0.26);
+        }
+        button[type="submit"]:active:not(:disabled) { transform: translateY(1px); }
         button[type="submit"]:focus-visible {
-            outline: 3px solid rgba(31,111,92,0.4);
+            outline: 3px solid rgba(21,96,74,0.35);
             outline-offset: 2px;
         }
         button[type="submit"]:disabled {
             background: var(--line-strong);
+            box-shadow: none;
             cursor: not-allowed;
         }
 
         .spinner {
             display: none;
-            width: 15px;
-            height: 15px;
-            border: 2px solid rgba(255,255,255,0.4);
+            width: 15px; height: 15px;
+            border: 2px solid rgba(255,255,255,0.45);
             border-top-color: #fff;
             border-radius: 50%;
             animation: spin 0.7s linear infinite;
@@ -248,59 +320,77 @@
         .is-submitting .spinner { display: block; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        .form-note { font-size: 0.85rem; color: var(--ink-faint); margin: 0; }
+        .form-note { font-size: 0.855rem; color: var(--ink-faint); margin: 0; }
 
         .form-error {
             display: none;
-            margin: 0 0 20px;
+            margin: 0 0 24px;
             padding: 14px 16px;
-            background: #fdecea;
-            border: 1px solid #f5c2bd;
-            border-radius: 5px;
+            background: var(--error-bg);
+            border: 1px solid var(--error-line);
+            border-left: 3px solid var(--error);
+            border-radius: 6px;
             color: var(--error);
             font-size: 0.9rem;
         }
         .form-error.visible { display: block; }
 
-        .success-panel { display: none; padding: 56px 32px; text-align: center; }
+        /* ---------- Success ---------- */
+        .success-panel { display: none; padding: 68px 44px 72px; text-align: center; }
         .success-panel.visible { display: block; }
-        .success-panel h2 { color: var(--success); margin: 0 0 12px; }
+        .success-panel h2 {
+            font-family: var(--serif);
+            font-weight: 400;
+            font-size: 1.95rem;
+            color: var(--ink);
+            margin: 0 0 14px;
+        }
         .success-panel p {
             margin: 0 auto;
-            max-width: 460px;
+            max-width: 430px;
             color: var(--ink-soft);
+            font-size: 1.02rem;
         }
         .success-check {
-            width: 56px;
-            height: 56px;
-            margin: 0 auto 20px;
+            width: 62px; height: 62px;
+            margin: 0 auto 24px;
             border-radius: 50%;
-            background: #e8f5e9;
+            background: #e7f2ea;
             color: var(--success);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.9rem;
+            font-size: 2rem;
         }
-
         .new-request {
             font-family: inherit;
-            font-size: 0.95rem;
+            font-size: 0.96rem;
             font-weight: 600;
-            color: var(--accent);
-            background: #fff;
+            color: var(--brand);
+            background: var(--paper);
             border: 1px solid var(--line-strong);
-            border-radius: 5px;
-            padding: 11px 24px;
-            margin-top: 28px;
+            border-radius: 6px;
+            padding: 13px 26px;
+            margin-top: 32px;
             cursor: pointer;
             transition: background 0.15s, border-color 0.15s;
         }
-        .new-request:hover { background: #f1f6f4; border-color: var(--accent); }
+        .new-request:hover { background: var(--brand-tint); border-color: var(--brand); }
         .new-request:focus-visible {
-            outline: 3px solid rgba(31,111,92,0.4);
+            outline: 3px solid rgba(21,96,74,0.35);
             outline-offset: 2px;
         }
+
+        /* ---------- Footer ---------- */
+        .site-footer {
+            max-width: 780px;
+            margin: 26px auto 0;
+            padding: 0 20px;
+            text-align: center;
+            font-size: 0.83rem;
+            color: var(--ink-faint);
+        }
+        .site-footer p { margin: 0; }
 
         .sr-only {
             position: absolute;
@@ -312,28 +402,44 @@
             border: 0;
         }
 
-        @media (max-width: 620px) {
-            body {
-                padding: calc(24px + env(safe-area-inset-top, 0px))
-                         calc(14px + env(safe-area-inset-right, 0px))
-                         calc(40px + env(safe-area-inset-bottom, 0px))
-                         calc(14px + env(safe-area-inset-left, 0px));
-            }
-            .card-body { padding: 22px; }
-            .config-notice { padding: 14px 22px; }
-            .header h1 { font-size: 1.5rem; }
+        @media (max-width: 640px) {
+            .page-intro { padding: 32px 18px 24px; }
+            .page-intro h1 { font-size: 1.72rem; }
+            .page-intro p { font-size: 0.98rem; }
+            .card { width: calc(100% - 24px); }
+            .card-body { padding: 26px 22px 24px; }
+            .config-notice { padding: 15px 22px; }
+            .success-panel { padding: 52px 24px 56px; }
             .row.two { grid-template-columns: 1fr; }
-            /* City gets its own line; State and ZIP are short enough to share one. */
+            /* City keeps its own line; State and ZIP are short enough to share one. */
             .row.city-state-zip { grid-template-columns: 1fr 1fr; }
             .row.city-state-zip > div:first-child { grid-column: 1 / -1; }
+            .actions { gap: 14px; }
+            button[type="submit"] { width: 100%; justify-content: center; }
+            .form-note { text-align: center; width: 100%; }
         }
-    </style>
+        </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>Project Intake Form</h1>
-        <p>Tell us about your project and we'll get back to you with next steps.</p>
+    <header class="site-header">
+        <div class="wordmark">
+            <svg width="30" height="30" viewBox="0 0 512 512" aria-hidden="true">
+                <rect width="512" height="512" rx="96" fill="#ffffff"/>
+                <rect x="146" y="92" width="220" height="328" rx="10" fill="#0e4737"/>
+                <rect x="176" y="124" width="140" height="110" rx="6" fill="#ffffff"/>
+                <rect x="176" y="258" width="140" height="130" rx="6" fill="#ffffff"/>
+                <circle cx="341" cy="256" r="12" fill="#ffffff"/>
+            </svg>
+            <div class="wordmark-text">Simply<span>Doors</span></div>
+        </div>
+    </header>
+
+    <div class="page-intro" id="pageIntro">
+        <p class="eyebrow">Project Intake</p>
+        <h1>Tell us about your project</h1>
+        <p>Share a few details and we'll follow up with next steps, pricing and
+           timing. It takes about two minutes.</p>
     </div>
 
     <div class="card">
@@ -477,6 +583,10 @@
         </div>
     </div>
 
+    <footer class="site-footer">
+        <p>Your details go straight to the SimplyDoors team and are never shared.</p>
+    </footer>
+
     <script>
         // ---------------------------------------------------------------
         // Web3Forms access key. Get one free at https://web3forms.com --
@@ -497,6 +607,7 @@
         const sameAsBilling = document.getElementById('sameAsBilling');
         const jobAddressFields = document.getElementById('jobAddressFields');
         const configNotice = document.getElementById('configNotice');
+        const pageIntro = document.getElementById('pageIntro');
 
         const isConfigured = ACCESS_KEY && ACCESS_KEY !== 'YOUR_ACCESS_KEY_HERE';
         if (!isConfigured) {
@@ -631,6 +742,7 @@
             setSubmitting(false);
             successPanel.classList.remove('visible');
             formWrapper.style.display = '';
+            pageIntro.style.display = '';
             window.scrollTo({ top: 0, behavior: 'smooth' });
             document.getElementById('company').focus();
         });
@@ -663,6 +775,7 @@
 
                 if (response.ok && result.success) {
                     formWrapper.style.display = 'none';
+                    pageIntro.style.display = 'none';
                     successPanel.classList.add('visible');
                     successPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 } else {

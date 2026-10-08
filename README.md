@@ -16,34 +16,28 @@ hosted anywhere static files are served (GitHub Pages, Netlify, S3, etc.).
 Collects company, contact name, billing address, job address, phone, email, and
 a description of the work, then emails the submission to your work inbox.
 
-### One-time setup
+### Setup &mdash; already done
 
-The page sends submissions through [Web3Forms](https://web3forms.com), a free
-form-to-email service. It needs no account and no backend, which is why the
-form works on a purely static host.
+The page sends submissions through [Web3Forms](https://web3forms.com), a
+form-to-email service that needs no backend, which is why the form works on a
+purely static host. The access key is configured in `intake.html`:
 
-1. Go to **https://web3forms.com**.
-2. Enter the work email address where you want intake submissions delivered.
-3. Web3Forms emails you an **access key** (a UUID that looks like
-   `a1b2c3d4-...`). Copy it.
-4. Open `intake.html`, find this line near the top of the `<script>` block, and
-   paste your key in place of the placeholder:
+```js
+const ACCESS_KEY = '496b94f6-00a0-43cc-b485-f71dff873dad';
+```
 
-   ```js
-   const ACCESS_KEY = 'YOUR_ACCESS_KEY_HERE';
-   ```
+Web3Forms designates this a **public** key, intended for client-side code, so
+committing it is expected and safe.
 
-5. Save and re-deploy. That's it.
+> **Where the destination email lives:** in the Web3Forms dashboard, not in this
+> repository. The key only says "deliver to the inbox registered for this form"
+> &mdash; the address itself never appears in the page source. To change where
+> submissions land, update the recipient in the Web3Forms dashboard; no code
+> change and no redeploy needed.
 
-Until a real key is in place, the page shows an amber "Setup needed" banner and
-refuses to submit, so a half-configured form can never silently swallow a
-customer's inquiry.
-
-> **Where the destination email lives:** with your Web3Forms account, not in
-> this repository. The access key is a public-by-design token that only says
-> "deliver to the inbox registered for this key" &mdash; so committing it is safe,
-> and your work address is never exposed in the page source. To change the
-> destination later, update it in your Web3Forms account; no code change needed.
+If the key is ever cleared or replaced with the `YOUR_ACCESS_KEY_HERE`
+placeholder, the page shows an amber "Setup needed" banner and refuses to
+submit, so a misconfigured form can never silently swallow a customer's inquiry.
 
 ### What the email looks like
 
